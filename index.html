@@ -74,6 +74,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .question-counter {
@@ -255,21 +257,21 @@
         }
 
         .nav-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            grid-template-rows: auto auto;
             gap: 10px;
             width: 100%;
+            max-width: 780px;
+            justify-items: stretch;
+            align-items: stretch;
         }
 
-        /* Every module tile (categories + random) shares the same footprint */
+        /* Category tiles — professional typography & alignment */
         .nav-tile {
-            width: var(--nav-size);
-            height: var(--nav-size);
-            min-width: var(--nav-size);
-            min-height: var(--nav-size);
-            padding: 6px;
+            min-width: 0;
+            height: 56px;
+            padding: 6px 12px;
             background: var(--bg-panel);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -278,16 +280,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 2px;
-            transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+            transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease, color 0.18s ease;
             position: relative;
             overflow: hidden;
             color: var(--text-muted);
-            font-size: 0.62rem;
-            font-weight: 600;
-            letter-spacing: 0.01em;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
             text-align: center;
-            line-height: 1.15;
+            line-height: 1.3;
+            white-space: normal;
+            hyphens: auto;
+            -webkit-hyphens: auto;
         }
 
         .nav-tile:hover {
@@ -302,9 +306,21 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.18);
             color: var(--accent);
+            font-weight: 600;
         }
 
-        .nav-tile img {
+        /* Random quiz spans both rows */
+        .nav-tile.has-icon {
+            grid-column: 5;
+            grid-row: 1 / span 2;
+            width: var(--nav-size);
+            min-width: var(--nav-size);
+            height: auto;
+            min-height: 122px; /* 2 × 56 + gap */
+            padding: 8px;
+            align-self: stretch;
+        }
+        .nav-tile.has-icon img {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -312,13 +328,35 @@
             display: block;
         }
 
-        /* When tile is image-only, fill the box */
-        .nav-tile.has-icon {
-            padding: 5px;
+        /* Shuffle button */
+        .shuffle-btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+            margin-left: 10px;
         }
-        .nav-tile.has-icon img {
-            width: 100%;
-            height: 100%;
+        .shuffle-btn:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--border-strong);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+        .shuffle-btn:active,
+        .shuffle-btn.pressed {
+            background: rgba(56, 189, 248, 0.22);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+            transform: translateY(0);
         }
 
         /* Tooltip */
@@ -436,11 +474,13 @@
             .nav-label { font-size: 0.65rem; }
 
             .nav-row {
-                flex-wrap: nowrap;
-                justify-content: flex-start;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr) auto;
+                grid-template-rows: auto auto;
+                gap: 8px;
+                max-width: 100%;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                gap: 8px;
                 padding-bottom: 4px;
                 scrollbar-width: none;
             }
@@ -448,7 +488,32 @@
 
             :root { --nav-size: 58px; }
 
+            .nav-tile {
+                min-width: 0;
+                height: 50px;
+                font-size: 0.64rem;
+                font-weight: 500;
+                letter-spacing: 0.015em;
+                line-height: 1.25;
+                padding: 5px 8px;
+            }
+            .nav-tile.has-icon {
+                grid-column: 5;
+                grid-row: 1 / span 2;
+                width: var(--nav-size);
+                min-width: var(--nav-size);
+                height: auto;
+                min-height: 108px;
+                padding: 6px;
+            }
+
             .nav-tile[data-title]::after { display: none; }
+
+            .shuffle-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+                margin-left: 6px;
+            }
 
             .completion-screen { padding: 26px 16px; }
             .completion-screen h2 { font-size: 1.2rem; }
@@ -460,6 +525,11 @@
             .page-header { font-size: 0.9rem; }
             .question-text { font-size: 0.9rem; }
             .score-board { font-size: 0.72rem; }
+            .nav-tile {
+                min-width: 70px;
+                height: 44px;
+                font-size: 0.6rem;
+            }
         }
 
         @media (pointer: coarse) {
@@ -475,6 +545,9 @@
             <div class="page-header" id="pageTitle">Φόρτωση...</div>
             <div class="counters-wrapper">
                 <div class="question-counter" id="questionCounter">Ερώτηση: 0 / 0</div>
+                <button class="shuffle-btn" id="shuffleBtn" onclick="shuffleCurrentModule()" title="Shuffle questions">
+                    🔀 Shuffle
+                </button>
             </div>
         </div>
 
@@ -585,14 +658,14 @@
         };
 
         const categoryModules = {
-            derivatives: { ...module1Data, icon: "Artwork/1_paragoga_xrimatopistotika_mesa.png" },
-            market: { ...module2Data, icon: "Artwork/2_agora_paragogon.avif" },
-            arbitrage: { ...module3Data, icon: "Artwork/3_arbitrage.avif" },
-            futures: { ...module4Data, icon: "Artwork/4_prothesmiaka_symvolaia_kai_sme.png" },
-            options: { ...module5Data, icon: "Artwork/5_dikaiomata_proairesis.jpeg" },
-            swaps: { ...module6Data, icon: "Artwork/6_swaps.png" },
-            shortselling: { ...module7Data, icon: "Artwork/7_anoiktes_poliseis.jpeg" },
-            warrants: { ...module8Data, icon: "Artwork/8_warrants.jpg" }
+            derivatives: { ...module1Data },
+            market: { ...module2Data },
+            arbitrage: { ...module3Data },
+            futures: { ...module4Data },
+            options: { ...module5Data },
+            swaps: { ...module6Data },
+            shortselling: { ...module7Data },
+            warrants: { ...module8Data }
         };
 
         const allQuizCategories = {
@@ -881,15 +954,48 @@
 
             Object.keys(categoryModules).forEach(key => {
                 const mod = categoryModules[key];
-                row.appendChild(createNavTile(key, mod.title, mod.icon));
+                // Text-only tiles for categories (no icons)
+                row.appendChild(createNavTile(key, mod.title, null));
             });
 
-            // Random quiz as same-size tile at the end
+            // Random quiz keeps the image
             row.appendChild(createNavTile(
                 'randomQuiz',
                 'Random Quiz',
                 'Artwork/random_quiz.jpeg'
             ));
+        }
+
+        function shuffleCurrentModule() {
+            const currentModule = allQuizCategories[currentModuleKey];
+            if (!currentModule || !currentModule.data || currentModule.data.length === 0) return;
+
+            // Visual feedback – light up briefly
+            const btn = document.getElementById('shuffleBtn');
+            btn.classList.add('pressed');
+            setTimeout(() => btn.classList.remove('pressed'), 350);
+
+            // Fisher-Yates shuffle
+            const arr = currentModule.data;
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+
+            // Reset progress for this module
+            const state = moduleStates[currentModuleKey];
+            state.currentIndex = 0;
+            state.totalCorrect = 0;
+            state.totalAnswered = 0;
+            state.answered = false;
+            state.selectedAnswer = null;
+            state.isCompleted = false;
+
+            // Hide completion screen if visible and show quiz
+            document.getElementById('completionScreen').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'flex';
+
+            displayQuestion();
         }
 
         window.onload = function() {
